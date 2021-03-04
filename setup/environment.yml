@@ -1,4 +1,6 @@
 name: rad_pipeline_env
+channels:
+  - conda-forge
 dependencies:
   - ca-certificates>=2021.1.19
   - certifi>=2020.12.5
@@ -8,7 +10,11 @@ dependencies:
   - notebook
   - pandas>=1.0.3
   - pip>=20.0.2
+  - prefect
   - python=3.8
   - scipy>=1.4.1
   - setuptools>=47.1.1
+  - xlrd=1.2.0
   - wheel>=0.34.2
+  - pip:
+    - great_expectations
