@@ -18,3 +18,4 @@ dependencies:
   - wheel>=0.34.2
   - pip:
     - great_expectations
+    - zipcodes
