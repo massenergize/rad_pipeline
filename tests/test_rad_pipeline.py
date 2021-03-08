@@ -24,3 +24,8 @@ def test_zipcleaning(pathalogical_test_cases):
     """Test that zip cleaning works correctly on pathalogical inputs"""
     z_df = zipcodes.clean(pathalogical_test_cases["input"])
     pd.testing.assert_frame_equal(z_df, pathalogical_test_cases["expected"])
+
+
+def test_validate_zip_town_row():
+    #TODO
+    assert 0 == 1
