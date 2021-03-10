@@ -45,6 +45,7 @@ Residential Air-source Heat Pumps (ASHP)
 -  Data last updated 11/04/2019. Data date range includes 12/26/2014 -
    10/23/2019.
 -  Sectors: Residential.
+-  Observations: Raw data provider does not validate zip code or town name.  It is "as provided" and includes typos.
 
 Ground-source Heat Pumps (GSHP)
 -------------------------------

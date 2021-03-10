@@ -2,6 +2,7 @@
 Logic for cleaning and processing zipcode data
 """
 import pandas as pd
+import string
 import zipcodes
 
 def clean(zip_series: pd.Series) -> pd.DataFrame:
@@ -47,7 +48,7 @@ def validate_zip_town_row(row: dict, town_field: str, zip_field: str) -> pd.Seri
         return pd.Series(INVALID_RESULT)
     except ValueError:
         return pd.Series(INVALID_RESULT)
-        
+
     if len(zip_results) > 1:
         raise ValueError(f"Multimatch zipcode {row[zip_field]} encountered!")
     elif len(zip_results) == 0:
@@ -79,4 +80,35 @@ def validate_zip_town(df: pd.DataFrame, town_field: str, zip_field: str) -> pd.D
     - Pandas series indicating zipcode exists: boolean
     - Pandas series indicating raw data town is valid given zipcode: boolean
     """
-    return df.merge(df.apply(lambda row: validate_zip_town_row(row, town_field, zip_field), axis=1), left_index=True, right_index=True)
+    return df.merge(df.apply(
+                        lambda row: validate_zip_town_row(row, town_field, zip_field), axis=1
+                        ),
+                    left_index=True, right_index=True
+                )
+
+
+def valid_town_row(row: dict, town_field: str) -> pd.Series:
+    standardized_town = string.capwords(row[town_field].strip())
+    zip_list = zipcodes.filter_by(city=standardized_town, state='MA')
+    town_valid = (len(zip_list)>0)
+    output = {
+            "town": standardized_town,
+            "zip_exists": False,
+            "zip_cleaned": "",
+            "zip4_cleaned": "",
+            "zip_valid": False,
+            "town_valid": town_valid
+        }
+    return pd.Series(output)
+
+
+def validate_town(df: pd.DataFrame, town_field: str) -> pd.DataFrame:
+    """
+    Use zipcodes library to verify town name is valid and append cleaned fields
+
+    Return: pandas.DataFrame
+    - Pandas series of standardize (Capitalized) town name from zipcodes library: str
+    - Blank columns for zip_cleaned, zip4_cleaned, and zip_valid=False to comply with clean data schema
+    - Pandas series indicating raw data town is valid in the sense of existing in the zipcode lookup table.
+    """
+    return df.merge(df.apply(lambda row: valid_town_row(row, town_field), axis=1), left_index=True, right_index=True)

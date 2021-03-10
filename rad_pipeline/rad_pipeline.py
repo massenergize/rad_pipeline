@@ -1,6 +1,9 @@
 """Main module."""
 import os
 import pandas as pd
+# from prefect import task, Flow
+
+import rad_pipeline.zipcodes as zc
 
 DATA_DIR = "../data"
 SOURCES = ["EVs", "Solar Panels", "Air-source Heat Pumps", "Ground-source Heat Pumps"]
@@ -9,13 +12,14 @@ FIELDS = {
     "EVs": {
         "rebate": "Total Amount",
         "zip": "Zip Code",
+        "county": "County",
     },
     "Solar Panels": {
-        "rebate": '',
-        "cost": '',
-        "zip": '',
-        "town": '',
-        "income": '',
+        "cost": 'Total Cost with Design Fees',
+        "zip": 'Zip',
+        "sector": "Facility Type",
+        "town": 'City',
+        "capacity": "Capacity \n(DC, kW)"
     },
     "Air-source Heat Pumps": {
         "rebate": 'Rebate Amount ', # That's right, with a space at the end...
@@ -43,19 +47,16 @@ DATA_FILES = {
 
 
 def data_pull():
+    """
+    Download raw data files from source to data/raw directory
+    """
     print("Not implemented")
+    print(data_pull.__doc__)
 
 
 def data_load(source: str) -> pd.DataFrame:
     """
-    Load the raw data from the provided file (excel)
-    """
-    print("Not implemented")
-
-
-def data_clean(source: str) -> pd.DataFrame:
-    """
-    Apply data cleaning rules for source
+    Load the raw data from the provided file (excel) into memory
     """
     print("Not implemented")
 
@@ -75,6 +76,49 @@ def load_ashp() -> pd.DataFrame:
     df_ashp = f_ashp.drop([0]) #remove first null row for formatting purposes
 
     return df_ashp
+
+def data_clean(df: pd.DataFrame, source: str) -> pd.DataFrame:
+    """
+    Clean raw ASHP program data
+
+    Input:
+        - source: One of the sources defined in FIELDS.keys()
+        - df: The dataframe loaded from source.  Must contain fields named in the FIELDS dict
+    Results:
+    - Adds standardized fields:
+       - zip_cleaned, zip4_cleaned, zip_valid, zip_exists, town, town_valid
+    """
+
+    try:
+        field_map = FIELDS[source]
+    except KeyError:
+        raise ValueError(f"`source not recognized.  Must be one of {FIELDS.keys()}`")
+
+    try:
+        clean_zips = zc.clean(df[field_map["zip"]])
+        # Join fields
+        df_with_zips = pd.concat([clean_zips, df], axis=1)
+    except KeyError:
+        # Input has no zip field.  Try to simply validate town
+        try:
+            df_cleaned = zc.validate_town(df, field_map["town"])
+            return df_cleaned
+        except KeyError:
+            raise ValueError("Input has neither zip nor town field.  At least town is required.")
+
+
+    # Validate town names
+    try:
+        df_cleaned = zc.validate_zip_town(df_with_zips, field_map["town"], "zip_cleaned")
+    except KeyError:
+        #No town field provided
+        df_with_zips["dummy_town"] = ""
+        df_cleaned = zc.validate_zip_town(df_with_zips, "dummy_town", "zip_cleaned")
+        df_cleaned.drop("dummy_town", axis=1, inplace=True)
+        df_cleaned.town_valid = True
+
+
+    return df_cleaned
 
 
 def load_solar() -> pd.DataFrame:
