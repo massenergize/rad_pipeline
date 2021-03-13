@@ -6,8 +6,8 @@ RAD Pipeline
 .. image:: https://img.shields.io/pypi/v/rad_pipeline.svg
         :target: https://pypi.python.org/pypi/rad_pipeline
 
-.. image:: https://img.shields.io/travis/ahasha/rad_pipeline.svg
-        :target: https://travis-ci.com/ahasha/rad_pipeline
+.. image:: https://img.shields.io/travis/massenergize/rad_pipeline.svg
+        :target: https://travis-ci.com/massenergize/rad_pipeline
 
 .. image:: https://readthedocs.org/projects/rad-pipeline/badge/?version=latest
         :target: https://rad-pipeline.readthedocs.io/en/latest/?badge=latest
@@ -57,6 +57,7 @@ Ground-source Heat Pumps (GSHP)
 -  Data last updated June 2020. Data date range includes 01/02/2015 -
    06/09/2020.
 -  Sectors: Residential, Small Commercial.
+-  Observation: This datasource does NOT have zipcode of installation, only "City/Town"
 
 Production Tracking System for Solar Photovoltaic Report (PV in PTS)
 --------------------------------------------------------------------
