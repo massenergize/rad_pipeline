@@ -6,7 +6,7 @@ RAD Pipeline
 .. image:: https://img.shields.io/pypi/v/rad_pipeline.svg
         :target: https://pypi.python.org/pypi/rad_pipeline
 
-.. image:: https://img.shields.io/travis/massenergize/rad_pipeline.svg
+.. image:: https://travis-ci.com/massenergize/rad_pipeline.svg?branch=main
         :target: https://travis-ci.com/massenergize/rad_pipeline
 
 .. image:: https://readthedocs.org/projects/rad-pipeline/badge/?version=latest
