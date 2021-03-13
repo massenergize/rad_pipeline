@@ -1,5 +1,7 @@
 """Main module."""
 import os
+
+import great_expectations as ge
 import pandas as pd
 # from prefect import task, Flow
 
@@ -37,12 +39,19 @@ FIELDS = {
     }
 }
 
-DATA_FILES = {
+RAW_DATA_FILES = {
     "zip_code_community": os.path.join(DATA_DIR, "raw", "Zip Code Community.xlsx"),
     "Air-source Heat Pumps": os.path.join(DATA_DIR, "raw", "ResidentialASHPProjectDatabase 11.4.2019.xlsx"),
     "Solar Panels": os.path.join(DATA_DIR, "raw", "PVinPTSwebsite.xlsx"),
     "Ground-source Heat Pumps": os.path.join(DATA_DIR, "raw", "ResidentialandSmallScaleGSHPProjectDatabase.xlsx"),
     "EVs": os.path.join(DATA_DIR, "raw", "MOR-EV Stats Page Data Download.xlsx")
+}
+
+CLEAN_DATA_FILES = {
+    "Air-source Heat Pumps": os.path.join(DATA_DIR, "clean", "residential_ashp.{0}.csv"),
+    "Solar Panels": os.path.join(DATA_DIR, "clean", "solar.{0}.csv"),
+    "Ground-source Heat Pumps": os.path.join(DATA_DIR, "clean", "gshp.{0}.csv"),
+    "EVs": os.path.join(DATA_DIR, "clean", "evs.{0}.csv")
 }
 
 
@@ -58,7 +67,7 @@ def data_load(source: str) -> pd.DataFrame:
     """
     Load the raw data from the provided file (excel) into memory
     """
-    print("Not implemented")
+    print(f"Not implemented: {data_load.__doc__}")
 
 
 def data_aggregate(source: str) -> pd.DataFrame:
@@ -67,15 +76,6 @@ def data_aggregate(source: str) -> pd.DataFrame:
     """
     print("Not implemented")
 
-
-def load_ashp() -> pd.DataFrame:
-    """
-    Load raw data from ASHP excel file
-    """
-    f_ashp = pd.read_excel(DATA_FILES["Air-source Heat Pumps"], 'Sheet1', skiprows=3)
-    df_ashp = f_ashp.drop([0]) #remove first null row for formatting purposes
-
-    return df_ashp
 
 def data_clean(df: pd.DataFrame, source: str) -> pd.DataFrame:
     """
@@ -95,6 +95,7 @@ def data_clean(df: pd.DataFrame, source: str) -> pd.DataFrame:
         raise ValueError(f"`source not recognized.  Must be one of {FIELDS.keys()}`")
 
     try:
+        # Standardize zips into properly formatted strings
         clean_zips = zc.clean(df[field_map["zip"]])
         # Join fields
         df_with_zips = pd.concat([clean_zips, df], axis=1)
@@ -121,11 +122,38 @@ def data_clean(df: pd.DataFrame, source: str) -> pd.DataFrame:
     return df_cleaned
 
 
+def data_checkpoint(df: pd.DataFrame, source: str) -> pd.DataFrame:
+    """
+    Checkpoint cleaned data by splitting into accept and reject files and saving to clean data dir
+
+    Input:
+    pandas.DataFrame with cleaned fields: zip_valid, zip_exists, town_valid
+
+    Returns:
+    pandas.DataFrame of accepted cleaned records only
+    """
+    try:
+        clean_file = CLEAN_DATA_FILES[source].format("clean")
+        reject_file = CLEAN_DATA_FILES[source].format("reject")
+    except KeyError:
+        raise ValueError(f"Data source '{source}' not recognized.  Must be one of {CLEAN_DATA_FILES.keys()}")
+
+    #Accept records with valid Town identifier.  This implies zip is valid and exists if zip is present.
+    clean_data = df[df.town_valid]
+    reject_data = df[~df.town_valid]
+
+    clean_data.to_csv(clean_file, sep=",", index_label="index")
+    reject_data.to_csv(reject_file, sep=",", index_label="index")
+
+    return clean_data
+
+
+
 def load_solar() -> pd.DataFrame:
     """
-    Load rawa data from PV in PTS excel file
+    Load raw data from Photovoltaic (PV) in PTS excel file
     """
-    df_pv = pd.read_excel(DATA_FILES["Solar Panels"], 'PV in PTS', skiprows=7)
+    df_pv = pd.read_excel(RAW_DATA_FILES["Solar Panels"], 'PV in PTS', skiprows=7)
     return df_pv
 
 
@@ -133,7 +161,7 @@ def load_gshp() -> pd.DataFrame:
     """
     Load raw data from GSHP excel file
     """
-    df_gshp = pd.read_excel(DATA_FILES["Ground-source Heat Pumps"], 'Sheet1', skiprows=2)
+    df_gshp = pd.read_excel(RAW_DATA_FILES["Ground-source Heat Pumps"], 'Sheet1', skiprows=2)
     return df_gshp
 
 
@@ -141,5 +169,15 @@ def load_evs() -> pd.DataFrame:
     """
     Load raw data from Electric Vehicle excel file
     """
-    df_evs = pd.read_excel(DATA_FILES["EVs"], 'Data')
+    df_evs = pd.read_excel(RAW_DATA_FILES["EVs"], 'Data')
     return df_evs
+
+
+def load_ashp() -> pd.DataFrame:
+    """
+    Load raw data from ASHP excel file
+    """
+    f_ashp = pd.read_excel(RAW_DATA_FILES["Air-source Heat Pumps"], 'Sheet1', skiprows=3)
+    df_ashp = f_ashp.drop([0]) #remove first null row for formatting purposes
+
+    return df_ashp

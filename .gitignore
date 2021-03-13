@@ -24,6 +24,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+.DS_Store
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -111,9 +112,9 @@ data/raw/*
 !data/raw/.gitkeep
 data/output/*
 !data/output/.gitkeep
-data/cleaned/*
+data/clean/*
 !data/cleaned/.gitkeep
- 
+
 
 # notebook
 notebook/.ipynb_checkpoints
