@@ -51,7 +51,7 @@ setup(
     setup_requires=SETUP_REQUIRES,
     test_suite='tests',
     tests_require=TEST_REQUIRES,
-    url='https://github.com/ahasha/rad_pipeline',
+    url='https://github.com/massenergize/rad_pipeline',
     version='0.1.0',
     zip_safe=False,
 )

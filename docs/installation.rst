@@ -32,13 +32,13 @@ You can either clone the public repository:
 
 .. code-block:: console
 
-    $ git clone git://github.com/ahasha/rad_pipeline
+    $ git clone git://github.com/massenergize/rad_pipeline
 
 Or download the `tarball`_:
 
 .. code-block:: console
 
-    $ curl -OJL https://github.com/ahasha/rad_pipeline/tarball/master
+    $ curl -OJL https://github.com/massenergize/rad_pipeline/tarball/master
 
 Once you have a copy of the source, you can install it with:
 
@@ -47,5 +47,5 @@ Once you have a copy of the source, you can install it with:
     $ python setup.py install
 
 
-.. _Github repo: https://github.com/ahasha/rad_pipeline
-.. _tarball: https://github.com/ahasha/rad_pipeline/tarball/master
+.. _Github repo: https://github.com/massenergize/rad_pipeline
+.. _tarball: https://github.com/massenergize/rad_pipeline/tarball/master
