@@ -3,57 +3,62 @@
   "expectation_suite_name": "default",
   "expectations": [
     {
-      "expectation_type": "expect_table_row_count_to_be_between",
+      "expectation_type": "expect_column_to_exist",
       "kwargs": {
-        "max_value": 19964,
-        "min_value": 18566
+        "column": "Rebate Amount"
       },
       "meta": {}
     },
     {
       "expectation_type": "expect_column_to_exist",
       "kwargs": {
-        "column": "town_valid"
+        "column": "Total System Cost"
       },
       "meta": {}
     },
     {
       "expectation_type": "expect_column_to_exist",
       "kwargs": {
-        "column": "rebate"
+        "column": "Site City/Town"
       },
       "meta": {}
     },
     {
       "expectation_type": "expect_column_to_exist",
       "kwargs": {
-        "column": "cost"
+        "column": "Income-Based Rebate Received?"
       },
       "meta": {}
     },
     {
-      "expectation_type": "expect_column_values_to_be_in_set",
+      "expectation_type": "expect_column_values_to_be_in_type_list",
       "kwargs": {
-        "column": "town_valid",
-        "value_set": [
-          true
+        "column": "Rebate Amount",
+        "mostly": 0.99,
+        "type_list": [
+          "int",
+          "float"
         ]
       },
       "meta": {}
     },
     {
-      "expectation_type": "expect_column_values_to_be_of_type",
+      "expectation_type": "expect_column_values_to_be_in_type_list",
       "kwargs": {
-        "column": "cost",
-        "type_": "float"
+        "column": "Total System Cost",
+        "mostly": 0.99,
+        "type_list": [
+          "int",
+          "float"
+        ]
       },
       "meta": {}
     },
     {
-      "expectation_type": "expect_column_values_to_be_of_type",
+      "expectation_type": "expect_table_row_count_to_be_between",
       "kwargs": {
-        "column": "rebate",
-        "type_": "float"
+        "max_value": 1000,
+        "min_value": 538
       },
       "meta": {}
     }
