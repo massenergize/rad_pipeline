@@ -29,3 +29,14 @@ def test_zipcleaning(pathalogical_test_cases):
 def test_validate_zip_town_row():
     #TODO
     assert 0 == 1
+
+
+def test_all_numeric(): #lst: List -> bool:
+    """
+    Checks the values in a list and returns true if all values are numeric without missing values
+
+    NB: string values that can be cast to numeric, e.c. "3.12"
+    """
+    assert rad_pipeline.all_numeric([1,2.54,3])
+    assert rad_pipeline.all_numeric([1, "3", 47.2])
+    assert not rad_pipeline.all_numeric([1, "Howdy DOody", 25])

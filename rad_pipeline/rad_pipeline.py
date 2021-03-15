@@ -1,9 +1,11 @@
 """Main module."""
 import os
+from typing import List
 
 import great_expectations as ge
+import numpy as np
 import pandas as pd
-# from prefect import task, Flow
+#from prefect import task, Flow
 
 import rad_pipeline.zipcodes as zc
 
@@ -33,11 +35,29 @@ FIELDS = {
     "Ground-source Heat Pumps": {
         "rebate": 'Rebate Amount',
         "cost": 'Total System Cost',
-        "zip": 'Site Zip Code',
         "town": 'Site City/Town',
         "income": 'Income-Based Rebate Received?',
     }
 }
+
+VALUE_FIELDS = {
+    "EVs": {
+        "rebate": "Total Amount",
+    },
+    "Solar Panels": {
+        "cost": 'Total Cost with Design Fees',
+        "capacity": "Capacity \n(DC, kW)"
+    },
+    "Air-source Heat Pumps": {
+        "rebate": 'Rebate Amount ', # That's right, with a space at the end...
+        "cost": 'Total System Costs',
+    },
+    "Ground-source Heat Pumps": {
+        "rebate": 'Rebate Amount',
+        "cost": 'Total System Cost',
+    }
+}
+
 
 RAW_DATA_FILES = {
     "zip_code_community": os.path.join(DATA_DIR, "raw", "Zip Code Community.xlsx"),
@@ -47,15 +67,16 @@ RAW_DATA_FILES = {
     "EVs": os.path.join(DATA_DIR, "raw", "MOR-EV Stats Page Data Download.xlsx")
 }
 
+
 CLEAN_DATA_FILES = {
-    "Air-source Heat Pumps": os.path.join(DATA_DIR, "clean", "residential_ashp.{0}.csv"),
+    "Air-source Heat Pumps": os.path.join(DATA_DIR, "clean", "ashp.{0}.csv"),
     "Solar Panels": os.path.join(DATA_DIR, "clean", "solar.{0}.csv"),
     "Ground-source Heat Pumps": os.path.join(DATA_DIR, "clean", "gshp.{0}.csv"),
     "EVs": os.path.join(DATA_DIR, "clean", "evs.{0}.csv")
 }
 
 
-def data_pull():
+def data_pull(source: str):
     """
     Download raw data files from source to data/raw directory
     """
@@ -63,23 +84,16 @@ def data_pull():
     print(data_pull.__doc__)
 
 
-def data_load(source: str) -> pd.DataFrame:
+def clean_data_load(source: str) -> pd.DataFrame:
     """
-    Load the raw data from the provided file (excel) into memory
+    Load and validate the raw data from the clean data file into memory
     """
-    print(f"Not implemented: {data_load.__doc__}")
-
-
-def data_aggregate(source: str) -> pd.DataFrame:
-    """
-    Aggregate dataset `source` by municipality and zipcode
-    """
-    print("Not implemented")
+    return pd.read_csv(CLEAN_DATA_FILES[source].format("clean"), index_col="index")
 
 
 def data_clean(df: pd.DataFrame, source: str) -> pd.DataFrame:
     """
-    Clean raw ASHP program data
+    Clean raw program data
 
     Input:
         - source: One of the sources defined in FIELDS.keys()
@@ -87,6 +101,8 @@ def data_clean(df: pd.DataFrame, source: str) -> pd.DataFrame:
     Results:
     - Adds standardized fields:
        - zip_cleaned, zip4_cleaned, zip_valid, zip_exists, town, town_valid
+    - Coerces fields listed in `value_fields` to be numeric. Non-numeric values converted to nans
+       - Adds coerced numeric value as field name given in FIELDS map.
     """
 
     try:
@@ -118,8 +134,39 @@ def data_clean(df: pd.DataFrame, source: str) -> pd.DataFrame:
         df_cleaned.drop("dummy_town", axis=1, inplace=True)
         df_cleaned.town_valid = True
 
+    # Validate numeric value fields
+    value_fields = list(VALUE_FIELDS[source].values())
+    for value_field in value_fields:
+        df_cleaned[value_field] = pd.to_numeric(df[field_map[value_field]], errors='coerce')
 
     return df_cleaned
+
+
+def all_numeric(lst: List) -> bool:
+    """
+    Checks the values in a list and returns true if all values are numeric without missing values
+
+    NB: string values that can be cast to numeric, e.c. "3.12"
+    """
+    return not np.isnan(pd.to_numeric(lst, errors='coerce')).any()
+
+
+def validate_clean_record(row: dict, town_valid_field: str, value_fields: List[str]) -> bool:
+    """
+    Implement logic for diffrentiating an accepted input record from a rejected input record.
+
+    Inputs:
+    row: dict  DataFrame row
+    town_field: str  Town field name
+    value_fields: List[str]  List of numeric value fields being analyzed/aggregated
+
+    Returns:
+    Accept/Reject: boolean
+    """
+
+    # The town field has been marked valid and all value fields are numeric and present.
+    valid = row[town_valid_field] & all_numeric([row[f] for f in value_fields])
+    return valid
 
 
 def data_checkpoint(df: pd.DataFrame, source: str) -> pd.DataFrame:
@@ -128,6 +175,7 @@ def data_checkpoint(df: pd.DataFrame, source: str) -> pd.DataFrame:
 
     Input:
     pandas.DataFrame with cleaned fields: zip_valid, zip_exists, town_valid
+    source (Data source): str
 
     Returns:
     pandas.DataFrame of accepted cleaned records only
@@ -139,14 +187,22 @@ def data_checkpoint(df: pd.DataFrame, source: str) -> pd.DataFrame:
         raise ValueError(f"Data source '{source}' not recognized.  Must be one of {CLEAN_DATA_FILES.keys()}")
 
     #Accept records with valid Town identifier.  This implies zip is valid and exists if zip is present.
-    clean_data = df[df.town_valid]
-    reject_data = df[~df.town_valid]
+    #Accept recordes where all value fields are also numeric and non NAN.
+    value_fields = list(VALUE_FIELDS[source].values())
+    valid_record = df.apply(lambda row: validate_clean_record(row, "town_valid", value_fields), axis=1)
+    clean_data = df[valid_record]
+    reject_data = df[~valid_record]
 
     clean_data.to_csv(clean_file, sep=",", index_label="index")
     reject_data.to_csv(reject_file, sep=",", index_label="index")
 
     return clean_data
 
+
+def data_aggregate(df_clean: pd.DataFrame, source: str, locale_key: List[str], value_field: str) -> pd.DataFrame:
+    """
+    Aggregate a clean dataframe on a locale key (e.g. zipcode, county, county+Sector)
+    """
 
 
 def load_solar() -> pd.DataFrame:
