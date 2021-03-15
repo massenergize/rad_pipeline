@@ -13,6 +13,7 @@ dependencies:
   - pip>=20.0.2
   - prefect
   - python=3.8
+  - python-graphviz
   - scipy>=1.4.1
   - setuptools>=47.1.1
   - xlrd=1.2.0
