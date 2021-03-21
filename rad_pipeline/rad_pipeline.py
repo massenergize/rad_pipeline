@@ -17,13 +17,15 @@ FIELDS = {
         "rebate": "Total Amount",
         "zip": "Zip Code",
         "county": "County",
+        "date": 'Date of Purchase',
     },
     "Solar Panels": {
         "cost": 'Total Cost with Design Fees',
         "zip": 'Zip',
         "sector": "Facility Type",
         "town": 'City',
-        "capacity": "Capacity \n(DC, kW)"
+        "capacity": "Capacity \n(DC, kW)",
+        "date": "Date In Service",
     },
     "Air-source Heat Pumps": {
         "rebate": 'Rebate Amount ', # That's right, with a space at the end...
@@ -31,12 +33,14 @@ FIELDS = {
         "zip": 'Site Zip Code',
         "town": 'Site City/Town',
         "income": 'Receiving an Income-Based Adder?',
+        "date": 'Date Rebate Payment Approved by MassCEC',
     },
     "Ground-source Heat Pumps": {
         "rebate": 'Rebate Amount',
         "cost": 'Total System Cost',
         "town": 'Site City/Town',
         "income": 'Income-Based Rebate Received?',
+        "date": 'Rebate Approved by MassCEC',
     }
 }
 
@@ -67,12 +71,18 @@ RAW_DATA_FILES = {
     "EVs": os.path.join(DATA_DIR, "raw", "MOR-EV Stats Page Data Download.xlsx")
 }
 
-
 CLEAN_DATA_FILES = {
-    "Air-source Heat Pumps": os.path.join(DATA_DIR, "clean", "ashp.{0}.csv"),
-    "Solar Panels": os.path.join(DATA_DIR, "clean", "solar.{0}.csv"),
-    "Ground-source Heat Pumps": os.path.join(DATA_DIR, "clean", "gshp.{0}.csv"),
-    "EVs": os.path.join(DATA_DIR, "clean", "evs.{0}.csv")
+    "Air-source Heat Pumps": os.path.join(DATA_DIR, "clean", "ashp.{0}.pkl"),
+    "Solar Panels": os.path.join(DATA_DIR, "clean", "solar.{0}.pkl"),
+    "Ground-source Heat Pumps": os.path.join(DATA_DIR, "clean", "gshp.{0}.pkl"),
+    "EVs": os.path.join(DATA_DIR, "clean", "evs.{0}.pkl")
+}
+
+EXPECTATION_FILES = {
+    "Air-source Heat Pumps": os.path.join(DATA_DIR, "expectations", "ashp_{0}_expectations.json"),
+    "Solar Panels": os.path.join(DATA_DIR, "expectations", "solar_{0}_expectations.json"),
+    "Ground-source Heat Pumps": os.path.join(DATA_DIR, "expectations", "gshp_{0}_expectations.json"),
+    "EVs": os.path.join(DATA_DIR, "expectations", "evs_{0}_expectations.json")
 }
 
 
@@ -88,7 +98,13 @@ def clean_data_load(source: str) -> pd.DataFrame:
     """
     Load and validate the raw data from the clean data file into memory
     """
-    return pd.read_csv(CLEAN_DATA_FILES[source].format("clean"), index_col="index")
+    return pd.read_pickle(CLEAN_DATA_FILES[source].format("clean"))
+
+
+def dq_check(df: pd.DataFrame, source: str, stage: str):
+    result = ge.from_pandas(df).validate(EXPECTATION_FILES[source].format(stage))
+    print(result)
+    assert result.success
 
 
 def data_clean(df: pd.DataFrame, source: str) -> pd.DataFrame:
@@ -135,7 +151,7 @@ def data_clean(df: pd.DataFrame, source: str) -> pd.DataFrame:
         df_cleaned.town_valid = True
 
     # Validate numeric value fields
-    value_fields = list(VALUE_FIELDS[source].values())
+    value_fields = list(VALUE_FIELDS[source].keys())
     for value_field in value_fields:
         df_cleaned[value_field] = pd.to_numeric(df[field_map[value_field]], errors='coerce')
 
@@ -193,8 +209,8 @@ def data_checkpoint(df: pd.DataFrame, source: str) -> pd.DataFrame:
     clean_data = df[valid_record]
     reject_data = df[~valid_record]
 
-    clean_data.to_csv(clean_file, sep=",", index_label="index")
-    reject_data.to_csv(reject_file, sep=",", index_label="index")
+    clean_data.to_pickle(clean_file)
+    reject_data.to_pickle(reject_file)
 
     return clean_data
 
