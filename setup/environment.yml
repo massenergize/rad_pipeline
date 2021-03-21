@@ -19,5 +19,6 @@ dependencies:
   - xlrd=1.2.0
   - wheel>=0.34.2
   - pip:
+    - datacompy
     - great_expectations
     - zipcodes

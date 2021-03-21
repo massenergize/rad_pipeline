@@ -2,6 +2,7 @@ black
 pre-commit
 mypy
 isort
+datacompy
 pip==21.0.1
 bump2version==0.5.11
 wheel==0.33.6
