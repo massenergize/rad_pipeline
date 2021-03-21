@@ -67,6 +67,10 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr htmlcov/
 	rm -fr .pytest_cache
 
+clean-data:
+	rm data/clean/*.pkl
+	rm data/output/*.parquet
+
 lint: ## check style with flake8
 	flake8 rad_pipeline tests
 	mypy rad_pipeline
