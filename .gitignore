@@ -113,7 +113,7 @@ data/raw/*
 data/output/*
 !data/output/.gitkeep
 data/clean/*
-!data/cleaned/.gitkeep
+!data/clean/.gitkeep
 
 
 # notebook
