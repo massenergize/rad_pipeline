@@ -3,6 +3,14 @@
   "expectation_suite_name": "default",
   "expectations": [
     {
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "kwargs": {
+        "max_value": 30000,
+        "min_value": 19964
+      },
+      "meta": {}
+    },
+    {
       "expectation_type": "expect_column_to_exist",
       "kwargs": {
         "column": "Rebate Amount "
@@ -34,6 +42,13 @@
       "expectation_type": "expect_column_to_exist",
       "kwargs": {
         "column": "Receiving an Income-Based Adder?"
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "Date Rebate Payment Approved by MassCEC"
       },
       "meta": {}
     },
@@ -88,9 +103,27 @@
         ]
       },
       "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_of_type",
+      "kwargs": {
+        "column": "Date Rebate Payment Approved by MassCEC",
+        "type_": "datetime64"
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "Date Rebate Payment Approved by MassCEC",
+        "max_value": "2021-03-21 05:49:34.426938",
+        "min_value": "2014-12-26 00:00:00",
+        "parse_strings_as_datetimes": true
+      },
+      "meta": {}
     }
   ],
   "meta": {
-    "great_expectations_version": "0.13.12"
+    "great_expectations_version": "0.13.14"
   }
 }

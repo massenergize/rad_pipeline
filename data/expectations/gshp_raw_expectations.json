@@ -3,6 +3,14 @@
   "expectation_suite_name": "default",
   "expectations": [
     {
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "kwargs": {
+        "max_value": 1000,
+        "min_value": 538
+      },
+      "meta": {}
+    },
+    {
       "expectation_type": "expect_column_to_exist",
       "kwargs": {
         "column": "Rebate Amount"
@@ -31,6 +39,13 @@
       "meta": {}
     },
     {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "Rebate Approved by MassCEC"
+      },
+      "meta": {}
+    },
+    {
       "expectation_type": "expect_column_values_to_be_in_type_list",
       "kwargs": {
         "column": "Rebate Amount",
@@ -55,15 +70,17 @@
       "meta": {}
     },
     {
-      "expectation_type": "expect_table_row_count_to_be_between",
+      "expectation_type": "expect_column_values_to_be_between",
       "kwargs": {
-        "max_value": 1000,
-        "min_value": 538
+        "column": "Rebate Approved by MassCEC",
+        "max_value": "2021-03-21 05:49:35.404499",
+        "min_value": "2015-01-02 00:00:00",
+        "parse_strings_as_datetimes": true
       },
       "meta": {}
     }
   ],
   "meta": {
-    "great_expectations_version": "0.13.12"
+    "great_expectations_version": "0.13.14"
   }
 }
