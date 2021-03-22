@@ -5,8 +5,8 @@
     {
       "expectation_type": "expect_table_row_count_to_be_between",
       "kwargs": {
-        "max_value": 538,
-        "min_value": 511
+        "max_value": 90141,
+        "min_value": 82028
       },
       "meta": {}
     },
@@ -20,14 +20,14 @@
     {
       "expectation_type": "expect_column_to_exist",
       "kwargs": {
-        "column": "rebate"
+        "column": "cost"
       },
       "meta": {}
     },
     {
       "expectation_type": "expect_column_to_exist",
       "kwargs": {
-        "column": "cost"
+        "column": "capacity"
       },
       "meta": {}
     },
@@ -52,7 +52,7 @@
     {
       "expectation_type": "expect_column_values_to_be_of_type",
       "kwargs": {
-        "column": "rebate",
+        "column": "capacity",
         "type_": "float"
       },
       "meta": {}

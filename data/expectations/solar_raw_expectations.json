@@ -5,64 +5,64 @@
     {
       "expectation_type": "expect_table_row_count_to_be_between",
       "kwargs": {
-        "max_value": 30000,
-        "min_value": 19964
+        "max_value": 200000,
+        "min_value": 90141
       },
       "meta": {}
     },
     {
       "expectation_type": "expect_column_to_exist",
       "kwargs": {
-        "column": "Rebate Amount "
+        "column": "Total Cost with Design Fees"
       },
       "meta": {}
     },
     {
       "expectation_type": "expect_column_to_exist",
       "kwargs": {
-        "column": "Total System Costs"
+        "column": "Zip"
       },
       "meta": {}
     },
     {
       "expectation_type": "expect_column_to_exist",
       "kwargs": {
-        "column": "Site Zip Code"
+        "column": "Facility Type"
       },
       "meta": {}
     },
     {
       "expectation_type": "expect_column_to_exist",
       "kwargs": {
-        "column": "Site City/Town"
+        "column": "City"
       },
       "meta": {}
     },
     {
       "expectation_type": "expect_column_to_exist",
       "kwargs": {
-        "column": "Receiving an Income-Based Adder?"
+        "column": "Capacity \n(DC, kW)"
       },
       "meta": {}
     },
     {
       "expectation_type": "expect_column_to_exist",
       "kwargs": {
-        "column": "Date Rebate Payment Approved by MassCEC"
+        "column": "Date In Service"
       },
       "meta": {}
     },
     {
       "expectation_type": "expect_column_values_to_not_be_null",
       "kwargs": {
-        "column": "Site Zip Code"
+        "column": "Zip"
       },
       "meta": {}
     },
     {
       "expectation_type": "expect_column_values_to_be_in_type_list",
       "kwargs": {
-        "column": "Site Zip Code",
+        "column": "Zip",
         "type_list": [
           "int",
           "float",
@@ -74,8 +74,7 @@
     {
       "expectation_type": "expect_column_values_to_match_regex",
       "kwargs": {
-        "column": "Site Zip Code",
-        "mostly": 0.98,
+        "column": "Zip",
         "regex": "^\\s*([0-9]{3,5})(?:[.]0)?(?:-([0-9]{4})|-)?\\s*$"
       },
       "meta": {}
@@ -83,8 +82,7 @@
     {
       "expectation_type": "expect_column_values_to_be_in_type_list",
       "kwargs": {
-        "column": "Rebate Amount ",
-        "mostly": 0.99,
+        "column": "Capacity \n(DC, kW)",
         "type_list": [
           "int",
           "float"
@@ -95,8 +93,7 @@
     {
       "expectation_type": "expect_column_values_to_be_in_type_list",
       "kwargs": {
-        "column": "Total System Costs",
-        "mostly": 0.99,
+        "column": "Total Cost with Design Fees",
         "type_list": [
           "int",
           "float"
@@ -107,7 +104,7 @@
     {
       "expectation_type": "expect_column_values_to_be_of_type",
       "kwargs": {
-        "column": "Date Rebate Payment Approved by MassCEC",
+        "column": "Date In Service",
         "type_": "datetime64"
       },
       "meta": {}
@@ -115,9 +112,9 @@
     {
       "expectation_type": "expect_column_values_to_be_between",
       "kwargs": {
-        "column": "Date Rebate Payment Approved by MassCEC",
-        "max_value": "2021-03-22 09:38:50.882398",
-        "min_value": "2014-12-26 00:00:00",
+        "column": "Date In Service",
+        "max_value": "2021-03-22 09:39:30.108299",
+        "min_value": "2000-01-01 00:00:00",
         "parse_strings_as_datetimes": true
       },
       "meta": {}

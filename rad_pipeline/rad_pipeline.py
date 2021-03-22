@@ -106,6 +106,8 @@ def dq_check(df: pd.DataFrame, source: str, stage: str):
     print(result)
     assert result.success
 
+    return result
+
 
 def data_clean(df: pd.DataFrame, source: str) -> pd.DataFrame:
     """
@@ -131,24 +133,23 @@ def data_clean(df: pd.DataFrame, source: str) -> pd.DataFrame:
         clean_zips = zc.clean(df[field_map["zip"]])
         # Join fields
         df_with_zips = pd.concat([clean_zips, df], axis=1)
+
+        # Validate town names
+        try:
+            df_cleaned = zc.validate_zip_town(df_with_zips, field_map["town"], "zip_cleaned")
+        except KeyError:
+            #No town field provided
+            df_with_zips["dummy_town"] = ""
+            df_cleaned = zc.validate_zip_town(df_with_zips, "dummy_town", "zip_cleaned")
+            df_cleaned.drop("dummy_town", axis=1, inplace=True)
+            df_cleaned.town_valid = True
+
     except KeyError:
         # Input has no zip field.  Try to simply validate town
         try:
             df_cleaned = zc.validate_town(df, field_map["town"])
-            return df_cleaned
         except KeyError:
             raise ValueError("Input has neither zip nor town field.  At least town is required.")
-
-
-    # Validate town names
-    try:
-        df_cleaned = zc.validate_zip_town(df_with_zips, field_map["town"], "zip_cleaned")
-    except KeyError:
-        #No town field provided
-        df_with_zips["dummy_town"] = ""
-        df_cleaned = zc.validate_zip_town(df_with_zips, "dummy_town", "zip_cleaned")
-        df_cleaned.drop("dummy_town", axis=1, inplace=True)
-        df_cleaned.town_valid = True
 
     # Validate numeric value fields
     value_fields = list(VALUE_FIELDS[source].keys())
