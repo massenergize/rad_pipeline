@@ -6,63 +6,49 @@
       "expectation_type": "expect_table_row_count_to_be_between",
       "kwargs": {
         "max_value": 30000,
-        "min_value": 19964
+        "min_value": 18632
       },
       "meta": {}
     },
     {
       "expectation_type": "expect_column_to_exist",
       "kwargs": {
-        "column": "Rebate Amount "
+        "column": "Total Amount"
       },
       "meta": {}
     },
     {
       "expectation_type": "expect_column_to_exist",
       "kwargs": {
-        "column": "Total System Costs"
+        "column": "Zip Code"
       },
       "meta": {}
     },
     {
       "expectation_type": "expect_column_to_exist",
       "kwargs": {
-        "column": "Site Zip Code"
+        "column": "County"
       },
       "meta": {}
     },
     {
       "expectation_type": "expect_column_to_exist",
       "kwargs": {
-        "column": "Site City/Town"
-      },
-      "meta": {}
-    },
-    {
-      "expectation_type": "expect_column_to_exist",
-      "kwargs": {
-        "column": "Receiving an Income-Based Adder?"
-      },
-      "meta": {}
-    },
-    {
-      "expectation_type": "expect_column_to_exist",
-      "kwargs": {
-        "column": "Date Rebate Payment Approved by MassCEC"
+        "column": "Date of Purchase"
       },
       "meta": {}
     },
     {
       "expectation_type": "expect_column_values_to_not_be_null",
       "kwargs": {
-        "column": "Site Zip Code"
+        "column": "Zip Code"
       },
       "meta": {}
     },
     {
       "expectation_type": "expect_column_values_to_be_in_type_list",
       "kwargs": {
-        "column": "Site Zip Code",
+        "column": "Zip Code",
         "type_list": [
           "int",
           "float",
@@ -74,8 +60,7 @@
     {
       "expectation_type": "expect_column_values_to_match_regex",
       "kwargs": {
-        "column": "Site Zip Code",
-        "mostly": 0.98,
+        "column": "Zip Code",
         "regex": "^\\s*([0-9]{3,5})(?:[.]0)?(?:-([0-9]{4})|-)?\\s*$"
       },
       "meta": {}
@@ -83,20 +68,7 @@
     {
       "expectation_type": "expect_column_values_to_be_in_type_list",
       "kwargs": {
-        "column": "Rebate Amount ",
-        "mostly": 0.99,
-        "type_list": [
-          "int",
-          "float"
-        ]
-      },
-      "meta": {}
-    },
-    {
-      "expectation_type": "expect_column_values_to_be_in_type_list",
-      "kwargs": {
-        "column": "Total System Costs",
-        "mostly": 0.99,
+        "column": "Total Amount",
         "type_list": [
           "int",
           "float"
@@ -107,7 +79,7 @@
     {
       "expectation_type": "expect_column_values_to_be_of_type",
       "kwargs": {
-        "column": "Date Rebate Payment Approved by MassCEC",
+        "column": "Date of Purchase",
         "type_": "datetime64"
       },
       "meta": {}
@@ -115,9 +87,9 @@
     {
       "expectation_type": "expect_column_values_to_be_between",
       "kwargs": {
-        "column": "Date Rebate Payment Approved by MassCEC",
-        "max_value": "2021-03-23 04:23:05.282895",
-        "min_value": "2014-12-26 00:00:00",
+        "column": "Date of Purchase",
+        "max_value": "2021-03-23 04:23:31.633973",
+        "min_value": "2014-06-18 00:00:00",
         "parse_strings_as_datetimes": true
       },
       "meta": {}

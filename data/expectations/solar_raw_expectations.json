@@ -113,7 +113,7 @@
       "expectation_type": "expect_column_values_to_be_between",
       "kwargs": {
         "column": "Date In Service",
-        "max_value": "2021-03-22 09:39:30.108299",
+        "max_value": "2021-03-23 04:23:26.619942",
         "min_value": "2000-01-01 00:00:00",
         "parse_strings_as_datetimes": true
       },
