@@ -12,6 +12,8 @@ import rad_pipeline.zipcodes as zc
 DATA_DIR = "../data"
 SOURCES = ["EVs", "Solar Panels", "Air-source Heat Pumps", "Ground-source Heat Pumps"]
 
+# Mapping of standardized/cleaned field names to raw data field names
+# Also communicates which fields are present in each dataset.
 FIELDS = {
     "EVs": {
         "rebate": "Total Amount",
@@ -44,6 +46,8 @@ FIELDS = {
     }
 }
 
+# Mapping of standardized/cleaned field names to raw field names
+# Contains only numeric fields which will be aggregated.
 VALUE_FIELDS = {
     "EVs": {
         "rebate": "Total Amount",
@@ -71,6 +75,7 @@ RAW_DATA_FILES = {
     "EVs": os.path.join(DATA_DIR, "raw", "MOR-EV Stats Page Data Download.xlsx")
 }
 
+
 CLEAN_DATA_FILES = {
     "Air-source Heat Pumps": os.path.join(DATA_DIR, "clean", "ashp.{0}.pkl"),
     "Solar Panels": os.path.join(DATA_DIR, "clean", "solar.{0}.pkl"),
@@ -78,11 +83,20 @@ CLEAN_DATA_FILES = {
     "EVs": os.path.join(DATA_DIR, "clean", "evs.{0}.pkl")
 }
 
+
 EXPECTATION_FILES = {
     "Air-source Heat Pumps": os.path.join(DATA_DIR, "expectations", "ashp_{0}_expectations.json"),
     "Solar Panels": os.path.join(DATA_DIR, "expectations", "solar_{0}_expectations.json"),
     "Ground-source Heat Pumps": os.path.join(DATA_DIR, "expectations", "gshp_{0}_expectations.json"),
     "EVs": os.path.join(DATA_DIR, "expectations", "evs_{0}_expectations.json")
+}
+
+
+SECTOR_LOOKUP = {
+    "Air-source Heat Pumps": "Residential",
+    "Ground-source Heat Pumps": "Residential and Small Scale",
+    "Solar Panels": "All",
+    "EVs": "Consumer",
 }
 
 
@@ -138,7 +152,7 @@ def data_clean(df: pd.DataFrame, source: str) -> pd.DataFrame:
         try:
             df_cleaned = zc.validate_zip_town(df_with_zips, field_map["town"], "zip_cleaned")
         except KeyError:
-            #No town field provided
+            #No town field provided (EVs)
             df_with_zips["dummy_town"] = ""
             df_cleaned = zc.validate_zip_town(df_with_zips, "dummy_town", "zip_cleaned")
             df_cleaned.drop("dummy_town", axis=1, inplace=True)
@@ -172,6 +186,8 @@ def validate_clean_record(row: dict, town_valid_field: str, value_fields: List[s
     """
     Implement logic for diffrentiating an accepted input record from a rejected input record.
 
+    Currently valid: The town field has been marked valid and all value fields are numeric and present.
+
     Inputs:
     row: dict  DataFrame row
     town_field: str  Town field name
@@ -181,7 +197,7 @@ def validate_clean_record(row: dict, town_valid_field: str, value_fields: List[s
     Accept/Reject: boolean
     """
 
-    # The town field has been marked valid and all value fields are numeric and present.
+
     valid = row[town_valid_field] & all_numeric([row[f] for f in value_fields])
     return valid
 
@@ -210,6 +226,7 @@ def data_checkpoint(df: pd.DataFrame, source: str) -> pd.DataFrame:
     clean_data = df[valid_record]
     reject_data = df[~valid_record]
 
+    # Use pickle files to retain data types on reload.
     clean_data.to_pickle(clean_file)
     reject_data.to_pickle(reject_file)
 

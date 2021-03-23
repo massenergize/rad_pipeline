@@ -9,9 +9,11 @@ dependencies:
   - matplotlib
   - jupyter
   - notebook
+  - openpyxl
   - pandas>=1.0.3
   - pip>=20.0.2
   - prefect
+  - pyarrow
   - python=3.8
   - python-graphviz
   - scipy>=1.4.1
