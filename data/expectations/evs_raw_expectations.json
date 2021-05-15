@@ -88,7 +88,7 @@
       "expectation_type": "expect_column_values_to_be_between",
       "kwargs": {
         "column": "Date of Purchase",
-        "max_value": "2021-03-23 04:23:31.633973",
+        "max_value": "2021-03-23 07:26:39.519396",
         "min_value": "2014-06-18 00:00:00",
         "parse_strings_as_datetimes": true
       },

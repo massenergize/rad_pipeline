@@ -27,7 +27,7 @@ def test_zipcleaning(pathalogical_test_cases):
 
 
 def test_validate_zip_town_row():
-    #TODO
+    # TODO
     assert 0 == 1
 
 
@@ -40,3 +40,8 @@ def test_all_numeric(): #lst: List -> bool:
     assert rad_pipeline.all_numeric([1,2.54,3])
     assert rad_pipeline.all_numeric([1, "3", 47.2])
     assert not rad_pipeline.all_numeric([1, "Howdy DOody", 25])
+
+
+def test_clean_from_disk_matches_in_memory():
+    # TODO
+    assert 0 == 1

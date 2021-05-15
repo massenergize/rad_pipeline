@@ -70,6 +70,11 @@ def save_summarized_metrics(df: pd.DataFrame):
     df.to_excel(os.path.join(rp.DATA_DIR, "output", "RAD_metrics.xlsx"))
 
 
+def load_summarized_metrics() -> pd.DataFrame:
+    df = pd.read_parquet(os.path.join(rp.DATA_DIR, "output", "RAD_metrics.parquet"))
+    return df
+
+
 def compute_summarized_metrics() -> pd.DataFrame():
 
     metric_groups = []
