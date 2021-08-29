@@ -835,7 +835,24 @@ def valid_town_row(row: dict, town_field: str) -> pd.Series:
     standardized_town = string.capwords(row[town_field].strip())
     zip_list = zipcodes.filter_by(city=standardized_town, state='MA')
     town_valid = (len(zip_list)>0)
+
+    muni_list = [ZIP_MUNI_MAP.get(z['zip_code']) for z in zip_list]
+    unique_munis = list(pd.Series([m for m in muni_list if m is not None]).unique())
+    if len(unique_munis) == 1:
+        muni = unique_munis[0]
+    else:
+        muni = None
+
+    if not muni:
+        #Try looking up town_field in City/Muni map
+        standardized_raw_town_name = str(row[town_field]).lower().strip()
+        muni = CITY_MUNI_MAP.get(standardized_raw_town_name)
+        if not muni:
+            muni = "INVALID"
+            town_valid = False
+
     output = {
+            "municipality": muni,
             "town": standardized_town,
             "zip_exists": False,
             "zip_cleaned": "",

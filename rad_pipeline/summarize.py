@@ -86,7 +86,7 @@ def compute_summarized_metrics() -> pd.DataFrame():
             print(f"Skipping {source}")
             continue
 
-        for locale_field in ["town", "zip_cleaned"]:
+        for locale_field in ["municipality", "town", "zip_cleaned"]:
 
 
             groups, locale_base = locale_aggregation(df_cleaned, locale_field, source)
@@ -94,6 +94,7 @@ def compute_summarized_metrics() -> pd.DataFrame():
             base_df = locale_base.copy()
             base_df["technology"] = source
             base_df["sector"] = rp.SECTOR_LOOKUP[source]
+            base_df["locale_type"] = locale_field
 
             if "rebate" in df_cleaned.columns:
                 # Quantity of Rebates

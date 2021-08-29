@@ -1,0 +1,143 @@
+{
+  "data_asset_type": "Dataset",
+  "expectation_suite_name": "default",
+  "expectations": [
+    {
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "kwargs": {
+        "max_value": 40000,
+        "min_value": 24000
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "zipcodes"
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "start_date"
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "end_date"
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "technology"
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "sector"
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "value_unit"
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "metric_name"
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "value"
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_distinct_values_to_equal_set",
+      "kwargs": {
+        "column": "technology",
+        "value_set": [
+          "Air-source Heat Pumps",
+          "Ground-source Heat Pumps",
+          "Solar Panels",
+          "EVs"
+        ]
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_distinct_values_to_contain_set",
+      "kwargs": {
+        "column": "metric_name",
+        "value_set": [
+          "Number of Rebates",
+          "Total Rebate Value",
+          "Average Rebate Value",
+          "Total Cost",
+          "Average Cost",
+          "Number of generation facilities",
+          "Total Generation Capacity",
+          "Average Generation Capacity"
+        ]
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_distinct_values_to_contain_set",
+      "kwargs": {
+        "column": "sector",
+        "value_set": [
+          "Residential",
+          "Residential and Small Scale",
+          "Consumer",
+          "All",
+          "Commercial / Office",
+          "Industrial",
+          "Multi-family residential (4 or more dwelling units per building)",
+          "Municipal - K-12 School",
+          "Other",
+          "Residential (3 or fewer dwelling units per building)",
+          "Retail",
+          "Agricultural",
+          "Municipal / Government / Public",
+          "Restaurant / Food Service",
+          "School (K-12)",
+          "State",
+          "Community Solar",
+          "College / University",
+          "Religious",
+          "Mixed use (commercial & residential)",
+          "State - College/University",
+          "Hospital / Health Care",
+          "Federal"
+        ]
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_of_type",
+      "kwargs": {
+        "column": "value",
+        "type_": "float64"
+      },
+      "meta": {}
+    }
+  ],
+  "meta": {
+    "great_expectations_version": "0.13.14"
+  }
+}

@@ -116,7 +116,7 @@
       "expectation_type": "expect_column_values_to_be_between",
       "kwargs": {
         "column": "Date Rebate Payment Approved by MassCEC",
-        "max_value": "2021-03-23 07:26:06.813312",
+        "max_value": "2021-07-19 22:51:31.583968",
         "min_value": "2014-12-26 00:00:00",
         "parse_strings_as_datetimes": true
       },
